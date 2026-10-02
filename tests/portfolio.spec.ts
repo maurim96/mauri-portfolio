@@ -138,7 +138,114 @@ test("the portfolio is complete when WebGL cannot initialize", async ({
     }),
   ).toBeVisible();
   await expect(page.locator(".sculpture-fallback")).toBeVisible();
+  await page.getByRole("button", { name: "Blueprint", exact: true }).click();
+  await expect(page.locator(".fallback-knot i").first()).toHaveCSS(
+    "border-top-width",
+    "1px",
+  );
   await expect(
     page.getByRole("link", { name: "Email Mauricio" }),
   ).toHaveAttribute("href", "mailto:mauriminio96@gmail.com");
+});
+
+test("project depth follows the pointer and stops when motion is paused", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "active");
+  const card = page.locator(".project-bask");
+  const art = card.locator(".project-art");
+  await art.scrollIntoViewIfNeeded();
+  const bounds = await art.boundingBox();
+  if (!bounds) throw new Error("Project artwork must be visible");
+  await page.mouse.move(
+    bounds.x + bounds.width * 0.8,
+    bounds.y + bounds.height * 0.2,
+  );
+  await expect(card).toHaveAttribute("data-pointer-active", "true");
+  await expect(art).not.toHaveCSS("transform", "none");
+  await page.mouse.move(0, 0);
+  await expect(card).toHaveAttribute("data-pointer-active", "false");
+  await page.getByRole("button", { name: "Pause animations" }).click();
+  await art.hover();
+  await expect(card).toHaveAttribute("data-motion", "paused");
+  await expect(art).toHaveCSS("transform", "none");
+  await expect(card).toHaveAttribute("data-pointer-active", "false");
+});
+
+test("the sculpture appearance can change with the keyboard while motion is paused", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const canvas = page.locator(".sculpture canvas");
+  await expect(canvas).toBeVisible();
+  const chrome = await canvas.screenshot();
+  const blueprint = page.getByRole("button", {
+    name: "Blueprint",
+    exact: true,
+  });
+  await blueprint.focus();
+  await page.keyboard.press("Enter");
+  await expect(blueprint).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".sculpture")).toHaveAttribute(
+    "data-mode",
+    "blueprint",
+  );
+  await expect
+    .poll(async () => (await canvas.screenshot()).equals(chrome))
+    .toBe(false);
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
+});
+
+test("each project loads its brand assets and links to its own website", async ({
+  page,
+}) => {
+  await page.goto("/");
+  for (const project of [
+    {
+      id: "bask",
+      name: "Bask Health",
+      link: "Visit Bask Health",
+      url: "https://bask.health",
+    },
+    {
+      id: "breeze",
+      name: "Breeze",
+      link: "Visit Breeze",
+      url: "https://www.breezeoralcare.com/",
+    },
+    {
+      id: "pilou",
+      name: "Pilou",
+      link: "Visit Pilou",
+      url: "https://pilou.io/",
+    },
+  ]) {
+    const card = page.locator(`.project-${project.id}`);
+    await card.locator(".project-art").scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        card
+          .locator(".project-art img")
+          .evaluateAll((images) =>
+            images.every(
+              (image) =>
+                (image as HTMLImageElement).complete &&
+                (image as HTMLImageElement).naturalWidth > 0,
+            ),
+          ),
+      )
+      .toBe(true);
+    await page.getByRole("button", { name: `Explore ${project.name}` }).click();
+    const dialog = page.getByRole("dialog", { name: project.name });
+    await expect(
+      dialog.getByRole("link", { name: project.link, exact: true }),
+    ).toHaveAttribute("href", project.url);
+    if (project.id !== "bask")
+      await expect(
+        dialog.getByRole("link", { name: "Read the case study" }),
+      ).toHaveAttribute("href", /https:\/\/nolte.io\/work\//);
+    await page.keyboard.press("Escape");
+  }
 });

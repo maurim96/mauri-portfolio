@@ -2,15 +2,19 @@
 
 import { Environment, Lightformer } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Group, MathUtils, Mesh } from "three";
 import { SculptureFallback } from "./sculpture-fallback";
+import type { SculptureMode } from "./sculpture";
 
 type SculptureSceneProps = {
   paused: boolean;
+  mode: SculptureMode;
 };
 
-function Sculpture({ paused }: SculptureSceneProps) {
+function Sculpture({ paused, mode }: SculptureSceneProps) {
+  const blueprint = mode === "blueprint";
+  const invalidate = useThree(({ invalidate }) => invalidate);
   const scale = useThree(({ viewport }) =>
     Math.min(1.02, viewport.width / 4.7),
   );
@@ -18,6 +22,10 @@ function Sculpture({ paused }: SculptureSceneProps) {
   const body = useRef<Mesh>(null);
   const orbit = useRef<Group>(null);
   const elapsed = useRef(0);
+
+  useEffect(() => {
+    invalidate();
+  }, [invalidate, mode]);
 
   useFrame(({ pointer }, frameDelta) => {
     if (paused || !sculpture.current || !body.current || !orbit.current) return;
@@ -44,52 +52,87 @@ function Sculpture({ paused }: SculptureSceneProps) {
   return (
     <group ref={sculpture} rotation={[-0.38, 0.58, -0.18]} scale={scale}>
       <mesh ref={body}>
-        <torusKnotGeometry args={[1.2, 0.355, 256, 32, 2, 3]} />
-        <meshPhysicalMaterial
-          color="#878b85"
-          metalness={1}
-          roughness={0.22}
-          clearcoat={1}
-          clearcoatRoughness={0.16}
-          envMapIntensity={1.5}
+        <torusKnotGeometry
+          args={[1.2, 0.355, blueprint ? 120 : 256, blueprint ? 12 : 32, 2, 3]}
         />
+        {blueprint ? (
+          <meshBasicMaterial
+            color="#bfd2cb"
+            wireframe
+            transparent
+            opacity={0.78}
+          />
+        ) : (
+          <meshPhysicalMaterial
+            color="#878b85"
+            metalness={1}
+            roughness={0.22}
+            clearcoat={1}
+            clearcoatRoughness={0.16}
+            envMapIntensity={1.5}
+          />
+        )}
       </mesh>
 
       <group ref={orbit} rotation={[1.02, -0.35, 0.22]}>
         <mesh>
-          <torusGeometry args={[2.05, 0.028, 12, 192]} />
-          <meshStandardMaterial
-            color="#ff622b"
-            emissive="#ff4f1d"
-            emissiveIntensity={0.42}
-            metalness={0.6}
-            roughness={0.24}
+          <torusGeometry
+            args={[2.05, 0.028, blueprint ? 6 : 12, blueprint ? 120 : 192]}
           />
+          {blueprint ? (
+            <meshBasicMaterial color="#ff622b" wireframe />
+          ) : (
+            <meshStandardMaterial
+              color="#ff622b"
+              emissive="#ff4f1d"
+              emissiveIntensity={0.42}
+              metalness={0.6}
+              roughness={0.24}
+            />
+          )}
         </mesh>
         <mesh position={[2.015, 0.377, 0]}>
-          <sphereGeometry args={[0.125, 32, 24]} />
-          <meshPhysicalMaterial
-            color="#f0ece0"
-            metalness={0.88}
-            roughness={0.12}
-            clearcoat={1}
+          <sphereGeometry
+            args={[0.125, blueprint ? 12 : 32, blueprint ? 8 : 24]}
           />
+          {blueprint ? (
+            <meshBasicMaterial color="#bfd2cb" wireframe />
+          ) : (
+            <meshPhysicalMaterial
+              color="#f0ece0"
+              metalness={0.88}
+              roughness={0.12}
+              clearcoat={1}
+            />
+          )}
         </mesh>
         <mesh position={[-1.836, 0.912, 0]}>
-          <sphereGeometry args={[0.082, 24, 16]} />
-          <meshStandardMaterial
-            color="#ff622b"
-            metalness={0.75}
-            roughness={0.2}
+          <sphereGeometry
+            args={[0.082, blueprint ? 12 : 24, blueprint ? 8 : 16]}
           />
+          {blueprint ? (
+            <meshBasicMaterial color="#ff622b" wireframe />
+          ) : (
+            <meshStandardMaterial
+              color="#ff622b"
+              metalness={0.75}
+              roughness={0.2}
+            />
+          )}
         </mesh>
         <mesh position={[0.301, -2.028, 0]}>
-          <sphereGeometry args={[0.062, 24, 16]} />
-          <meshStandardMaterial
-            color="#bfc2b8"
-            metalness={1}
-            roughness={0.12}
+          <sphereGeometry
+            args={[0.062, blueprint ? 12 : 24, blueprint ? 8 : 16]}
           />
+          {blueprint ? (
+            <meshBasicMaterial color="#bfd2cb" wireframe />
+          ) : (
+            <meshStandardMaterial
+              color="#bfc2b8"
+              metalness={1}
+              roughness={0.12}
+            />
+          )}
         </mesh>
       </group>
     </group>
@@ -143,7 +186,7 @@ function StudioEnvironment() {
   );
 }
 
-export default function SculptureScene({ paused }: SculptureSceneProps) {
+export default function SculptureScene({ paused, mode }: SculptureSceneProps) {
   return (
     <Canvas
       camera={{ position: [0, 0, 6.5], fov: 42, near: 0.1, far: 40 }}
@@ -156,7 +199,7 @@ export default function SculptureScene({ paused }: SculptureSceneProps) {
       <directionalLight color="#fff1d8" position={[-3, 5, 5]} intensity={2.5} />
       <directionalLight color="#ff622b" position={[3, -2, 2]} intensity={0.5} />
       <StudioEnvironment />
-      <Sculpture paused={paused} />
+      <Sculpture paused={paused} mode={mode} />
     </Canvas>
   );
 }

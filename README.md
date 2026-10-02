@@ -1,6 +1,6 @@
 # Mauricio Miño — portfolio
 
-A personal portfolio for Mauricio Miño, Lead Software Engineer at Bask Health. Charcoal, ivory, signal orange, an interactive chrome sculpture, original project artwork, and an editorial account of his work.
+A personal portfolio for Mauricio Miño, Lead Software Engineer at Bask Health. Charcoal, ivory, signal orange, an interactive chrome / blueprint sculpture, branded project stages, and an editorial account of his work.
 
 ## Run locally
 
@@ -24,7 +24,7 @@ npm test
 npm run build
 ```
 
-Playwright checks project dialogs and keyboard focus, motion preference persistence, OS reduced motion, mobile navigation, and the no-WebGL fallback. Tests reuse a server already running on port 3007 or start a development server.
+Playwright checks project dialogs and keyboard focus, motion preference persistence, OS reduced motion, mobile navigation, brand asset loading and website links, pointer depth, paused sculpture appearance changes, and the no-WebGL fallback. Tests reuse a server already running on port 3007 or start a development server.
 
 For production locally, run `npm run build` and then `npm start`.
 
@@ -39,7 +39,8 @@ A ready-to-use GitHub Actions example is saved in `docs/verification-workflow.ym
 - `src/lib/content.ts`: project descriptions, career dates, links, and toolkit.
 - `src/components/sculpture-scene.tsx`: mesh, lighting, camera, and pointer motion.
 - `src/components/motion-provider.tsx`: persisted motion control and progressive animation.
-- `src/components/project-visual.tsx`: original conceptual artwork, separate from private product screens.
+- `src/components/project-visual.tsx`: official public brand assets in original portfolio compositions.
+- `src/components/project-interaction.css`: pointer tilt, reactive sheen, and motion-aware depth.
 - `src/app/globals.css`: layout, responsive rules, typography, and visual system.
 
 Motion respects the operating system preference unless the visitor explicitly chooses otherwise. A manual toggle persists in local storage when available. The hero stops continuously rendering when it is off screen or the tab is hidden. A static sculpture replaces WebGL when it is unavailable. Meaningful copy is rendered on the server and never depends on an animation completing.
@@ -48,7 +49,9 @@ Motion respects the operating system preference unless the visitor explicitly ch
 
 The user supplied the [résumé](https://docs.google.com/document/d/1SaJaLF93-_sKsc5UGep-4_N_8lyVBt6rhQqD1FP0Pv0/edit?tab=t.0) and [LinkedIn profile](https://www.linkedin.com/in/maurim96/). The résumé is not fully updated. The current lead role was confirmed directly by Mauricio and corroborated by the [Bask team page](https://bask.health/team). September 2024 is his company start date, not a claimed promotion date.
 
-Project context is corroborated by the [Breeze case study](https://nolte.io/work/breeze-oral-care) and [Pilou case study](https://nolte.io/work/pilou). Contribution and technology descriptions come from the supplied résumé. Agency metrics are not presented as individual accomplishments. The project illustrations are original conceptual representations.
+Project context is corroborated by the [Breeze case study](https://nolte.io/work/breeze-oral-care) and [Pilou case study](https://nolte.io/work/pilou). Contribution and technology descriptions come from the supplied résumé. Agency metrics are not presented as individual accomplishments.
+
+The cards use official logos and public imagery, stored locally under `public/projects`. Bask's illustration comes from its public landing page. Breeze and Pilou's product imagery comes from Nolte's published case studies and shows the identity used for that work; current marketing identities may differ. Exact asset URLs and palette evidence are documented in [project-brand-sources.md](docs/project-brand-sources.md). No private product screens are included.
 
 ## Deploy to Vercel
 

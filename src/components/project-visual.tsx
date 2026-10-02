@@ -1,57 +1,47 @@
+import Image from "next/image";
+import baskHouse from "../../public/projects/bask-house.webp";
+import breezeMobile from "../../public/projects/breeze-mobile.webp";
+import pilouPlatform from "../../public/projects/pilou-platform.webp";
+import pilouLogo from "../../public/projects/pilou-logo.png";
 import "./project-visual.css";
 
 type ProjectKind = "bask" | "breeze" | "pilou";
+
+const artworkSizes =
+  "(max-width: 640px) 150vw, (max-width: 1080px) 90vw, 850px";
 
 function BaskVisual() {
   return (
     <div className="pv-root pv-bask" aria-hidden="true">
       <div className="pv-bask-grid" />
-      <div className="pv-bask-orbit" />
-      <div className="pv-bask-monogram">b</div>
-      <div className="pv-bask-heading">
-        <span className="pv-bask-brand">bask</span>
-        <span className="pv-eyebrow">The connected care platform</span>
-      </div>
-      <div className="pv-bask-connector pv-bask-connector-one" />
-      <div className="pv-bask-connector pv-bask-connector-two" />
-      <div className="pv-flow-card pv-intake-card">
-        <div className="pv-flow-card-top">
-          <span className="pv-flow-symbol pv-intake-symbol">
-            <i />
-            <i />
-            <i />
-          </span>
-          <span className="pv-flow-index">01</span>
-        </div>
-        <span className="pv-flow-title">Intake</span>
-        <span className="pv-flow-detail">A better beginning.</span>
-        <span className="pv-flow-line">
-          <i />
+      <div className="pv-bask-glow" />
+      <Image
+        className="pv-brand pv-bask-brand"
+        src="/projects/bask-logo.svg"
+        width={64}
+        height={32}
+        alt=""
+      />
+      <span className="pv-bask-mantra">
+        Launch.
+        <br />
+        Scale.
+        <br />
+        Grow.
+      </span>
+      <Image
+        className="pv-bask-house pv-layer"
+        src={baskHouse}
+        sizes={artworkSizes}
+        unoptimized
+        alt=""
+      />
+      <div className="pv-brand-footer">
+        <span>bask.health</span>
+        <span className="pv-status">
+          <i /> Connected care
         </span>
       </div>
-      <div className="pv-flow-card pv-care-card">
-        <div className="pv-flow-card-top">
-          <span className="pv-flow-symbol pv-care-symbol" />
-          <span className="pv-flow-index">02</span>
-        </div>
-        <span className="pv-flow-title">Care</span>
-        <span className="pv-flow-detail">People at the center.</span>
-        <span className="pv-care-dots">
-          <i />
-          <i />
-          <i />
-          <i />
-        </span>
-      </div>
-      <div className="pv-flow-card pv-rx-card">
-        <div className="pv-flow-card-top">
-          <span className="pv-flow-symbol pv-rx-symbol">Rx</span>
-          <span className="pv-flow-index">03</span>
-        </div>
-        <span className="pv-flow-title">Connected.</span>
-        <span className="pv-flow-detail">From first step to follow-up.</span>
-      </div>
-      <span className="pv-bask-footer">Care without the friction.</span>
     </div>
   );
 }
@@ -59,41 +49,29 @@ function BaskVisual() {
 function BreezeVisual() {
   return (
     <div className="pv-root pv-breeze" aria-hidden="true">
-      <div className="pv-breeze-halo" />
-      <div className="pv-breeze-arches">
-        <i />
-        <i />
-        <i />
-        <i />
-      </div>
-      <span className="pv-breeze-note">A reason to smile.</span>
-      <div className="pv-breeze-back-card" />
-      <div className="pv-breeze-appointment">
-        <div className="pv-breeze-card-top">
-          <span className="pv-eyebrow">A little care goes a long way</span>
-          <span className="pv-breeze-spark">✳</span>
-        </div>
-        <div className="pv-breeze-tooth">
+      <div className="pv-breeze-sun" />
+      <Image
+        className="pv-brand pv-breeze-brand"
+        src="/projects/breeze-logo.svg"
+        width={133}
+        height={37}
+        alt=""
+      />
+      <span className="pv-breeze-spark">✳</span>
+      <Image
+        className="pv-breeze-mobile pv-layer"
+        src={breezeMobile}
+        sizes={artworkSizes}
+        alt=""
+      />
+      <div className="pv-brand-footer">
+        <span className="pv-breeze-label">A fresh take on dental.</span>
+        <span className="pv-breeze-chips">
           <i />
           <i />
-        </div>
-        <span className="pv-breeze-card-title">
-          A brighter
-          <br />
-          kind of care.
+          <i />
         </span>
-        <div className="pv-breeze-card-rule" />
-        <div className="pv-breeze-card-bottom">
-          <span>
-            Your next visit,
-            <br />
-            <strong>made simple.</strong>
-          </span>
-          <span className="pv-breeze-arrow">↗</span>
-        </div>
       </div>
-      <span className="pv-breeze-brand">breeze</span>
-      <span className="pv-breeze-caption">Dental care. Reimagined.</span>
     </div>
   );
 }
@@ -101,30 +79,28 @@ function BreezeVisual() {
 function PilouVisual() {
   return (
     <div className="pv-root pv-pilou" aria-hidden="true">
-      <div className="pv-pilou-halo" />
-      <span className="pv-eyebrow pv-pilou-eyebrow">
-        Small steps. Bigger possibilities.
+      <div className="pv-pilou-orbit" />
+      <div className="pv-pilou-orb" />
+      <Image
+        className="pv-brand pv-pilou-brand"
+        src={pilouLogo}
+        sizes="150px"
+        alt=""
+      />
+      <span className="pv-pilou-note">
+        Tu futuro.
+        <br />A tu manera.
       </span>
-      <div className="pv-pilou-sun" />
-      <div className="pv-pilou-step pv-pilou-step-one" />
-      <div className="pv-pilou-step pv-pilou-step-two" />
-      <div className="pv-pilou-step pv-pilou-step-three" />
-      <div className="pv-pilou-step pv-pilou-step-four" />
-      <div className="pv-pilou-step pv-pilou-step-five" />
-      <svg className="pv-pilou-path" viewBox="0 0 500 300" fill="none">
-        <path
-          className="pv-pilou-path-shadow"
-          d="M30 258H112V216H204V170H296V124H388V78H465"
-        />
-        <path d="M30 252H112V210H204V164H296V118H388V72H465" />
-        <circle cx="465" cy="72" r="7" />
-      </svg>
-      <div className="pv-pilou-label">
-        <span className="pv-pilou-label-dot" />
-        Long-term thinking.
+      <Image
+        className="pv-pilou-platform pv-layer"
+        src={pilouPlatform}
+        sizes={artworkSizes}
+        alt=""
+      />
+      <div className="pv-brand-footer">
+        <span>pilou.io</span>
+        <span className="pv-pilou-label">Empieza contigo ↗</span>
       </div>
-      <span className="pv-pilou-brand">pilou</span>
-      <span className="pv-pilou-caption">A future of your own.</span>
     </div>
   );
 }

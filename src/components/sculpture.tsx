@@ -4,6 +4,9 @@ import dynamic from "next/dynamic";
 import { Component, useEffect, useRef, useState } from "react";
 import { SculptureFallback } from "./sculpture-fallback";
 import { useMotionPreference } from "./motion-provider";
+import "./sculpture-controls.css";
+
+export type SculptureMode = "chrome" | "blueprint";
 
 const SculptureScene = dynamic(() => import("./sculpture-scene"), {
   ssr: false,
@@ -27,6 +30,7 @@ export function Sculpture() {
   const { paused } = useMotionPreference();
   const root = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
+  const [mode, setMode] = useState<SculptureMode>("chrome");
 
   useEffect(() => {
     let intersecting = true;
@@ -47,10 +51,34 @@ export function Sculpture() {
   }, []);
 
   return (
-    <div className="sculpture" ref={root} aria-hidden="true">
-      <SceneBoundary>
-        <SculptureScene paused={paused || !visible} />
-      </SceneBoundary>
+    <div className="sculpture" ref={root} data-mode={mode}>
+      <div className="sculpture-decoration" aria-hidden="true">
+        <SceneBoundary>
+          <SculptureScene paused={paused || !visible} mode={mode} />
+        </SceneBoundary>
+      </div>
+      <div
+        className="sculpture-controls"
+        role="group"
+        aria-label="Sculpture appearance"
+      >
+        <button
+          type="button"
+          aria-pressed={mode === "chrome"}
+          onClick={() => setMode("chrome")}
+        >
+          <span className="sculpture-chrome-mark" aria-hidden="true" />
+          Chrome
+        </button>
+        <button
+          type="button"
+          aria-pressed={mode === "blueprint"}
+          onClick={() => setMode("blueprint")}
+        >
+          <span className="sculpture-blueprint-mark" aria-hidden="true" />
+          Blueprint
+        </button>
+      </div>
     </div>
   );
 }
