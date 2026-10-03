@@ -1,0 +1,83 @@
+.project .project-open {
+  perspective: 1000px;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 24px;
+}
+
+.project-case-study {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-block: 12px;
+  color: var(--paper);
+  font-size: 11px;
+}
+
+.project-case-study:hover {
+  color: var(--orange);
+}
+
+.project .project-art {
+  isolation: isolate;
+  transform: translateY(var(--project-lift, 0px))
+    rotateX(var(--project-tilt-x, 0deg)) rotateY(var(--project-tilt-y, 0deg));
+  transform-origin: 50% 50%;
+  transition:
+    transform 0.55s cubic-bezier(0.2, 0.75, 0.25, 1),
+    box-shadow 0.55s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.project .project-art::after {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at var(--project-pointer-x, 50%) var(--project-pointer-y, 50%),
+    #ffffff35,
+    #ffffff14 27%,
+    #ffffff00 67%
+  );
+  mix-blend-mode: screen;
+  transition: opacity 0.45s ease;
+  content: "";
+}
+
+.project[data-motion="paused"] .project-art,
+.project[data-motion="paused"] .project-open:hover .project-art > .pv-root {
+  transform: none;
+}
+
+.project[data-motion="paused"] .project-art::after {
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project[data-motion="active"][data-pointer-active="true"] .project-art {
+    --project-lift: -5px;
+    box-shadow: 0 20px 42px #00000030;
+    transition-duration: 0.18s;
+  }
+
+  .project[data-motion="active"][data-pointer-active="true"]
+    .project-art::after {
+    opacity: 1;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .project .project-art,
+  .project .project-open:hover .project-art > .pv-root {
+    transform: none;
+  }
+
+  .project .project-art::after {
+    display: none;
+  }
+}
